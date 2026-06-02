@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>G &amp; O Waterproofing – Timesheet</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="screen-login" class="screen">
+  <div class="lang-bar">
+    <button class="lang-btn active" id="lang-es" onclick="setLang('es')">🇲🇽 ES</button>
+    <button class="lang-btn" id="lang-en" onclick="setLang('en')">🇺🇸 EN</button>
+  </div>
+  <div class="login-wrap">
+    <img src="/static/logo.png" alt="G&O" class="login-logo"/>
+    <h1 class="login-company">G &amp; O Waterproofing Inc.</h1>
+    <p class="login-sub" data-i18n="loginSub">Selecciona tu nombre e ingresa tu PIN</p>
+
+    <div class="login-card">
+      <select id="login-emp-select">
+        <option value="" data-i18n="selectName">— Selecciona tu nombre —</option>
+      </select>
+
+      <div class="pin-label" data-i18n="pinAccess">PIN de acceso</div>
+      <div class="pin-row">
+        <span class="pin-dot" id="d0"></span>
+        <span class="pin-dot" id="d1"></span>
+        <span class="pin-dot" id="d2"></span>
+        <span class="pin-dot" id="d3"></span>
+      </div>
+
+      <div class="pin-pad">
+        <button onclick="pinKey('1')">1</button><button onclick="pinKey('2')">2</button><button onclick="pinKey('3')">3</button>
+        <button onclick="pinKey('4')">4</button><button onclick="pinKey('5')">5</button><button onclick="pinKey('6')">6</button>
+        <button onclick="pinKey('7')">7</button><button onclick="pinKey('8')">8</button><button onclick="pinKey('9')">9</button>
+        <button onclick="pinKey('back')" class="pin-back">⌫</button>
+        <button onclick="pinKey('0')">0</button>
+        <button onclick="doLogin()" class="pin-enter">✓</button>
+      </div>
+      <div id="login-error" class="login-error hidden" data-i18n="pinWrong">PIN incorrecto. Intenta de nuevo.</div>
+    </div>
+
+    <button class="btn-link" onclick="showRegister()" data-i18n="newEmployee">¿Primera vez? Regístrate aquí</button>
+    <button class="btn-admin-link" onclick="showAdminLogin()" data-i18n="adminAccess">Acceso Administrador</button>
+  </div>
+</div>
+
+<!-- ══════════════ REGISTER ══════════════ -->
+<div id="screen-register" class="screen hidden">
+  <div class="lang-bar">
+    <button class="lang-btn active" id="rlang-es" onclick="setLang('es')">🇲🇽 ES</button>
+    <button class="lang-btn" id="rlang-en" onclick="setLang('en')">🇺🇸 EN</button>
+  </div>
+  <div class="login-wrap" style="gap:1rem">
+    <img src="/static/logo.png" alt="G&O" class="login-logo"/>
+    <h1 class="login-company" data-i18n="registerTitle">Crear Perfil</h1>
+
+    <!-- Step 1: Profile info -->
+    <div id="reg-step1" class="login-card" style="max-width:400px;width:100%">
+      <div class="step-indicator">
+        <span class="step active">1</span>
+        <span class="step-line"></span>
+        <span class="step">2</span>
+      </div>
+      <p class="step-label" data-i18n="step1Label">Tu información</p>
+      <input id="reg-name"    type="text"  data-i18n-ph="phName"    placeholder="Nombre completo *"/>
+      <input id="reg-email"   type="email" data-i18n-ph="phEmail"   placeholder="Email *"/>
+      <input id="reg-phone"   type="tel"   data-i18n-ph="phPhone"   placeholder="Teléfono"/>
+      <input id="reg-address" type="text"  data-i18n-ph="phAddress" placeholder="Dirección"/>
+      <div id="reg-step1-error" class="login-error hidden"></div>
+      <button class="pin-enter" style="width:100%;padding:.75rem;font-size:1rem;border-radius:10px" onclick="goStep2()" data-i18n="next">Siguiente →</button>
+    </div>
+
+    <!-- Step 2: PIN setup -->
+    <div id="reg-step2" class="login-card hidden" style="max-width:400px;width:100%">
+      <div class="step-indicator">
+        <span class="step done">✓</span>
+        <span class="step-line active"></span>
+        <span class="step active">2</span>
+      </div>
+      <p class="step-label" data-i18n="step2Label">Elige tu PIN de 4 dígitos</p>
+
+      <div class="pin-label" data-i18n="newPin">Nuevo PIN</div>
+      <div class="pin-row">
+        <span class="pin-dot" id="rp0"></span><span class="pin-dot" id="rp1"></span>
+        <span class="pin-dot" id="rp2"></span><span class="pin-dot" id="rp3"></span>
+      </div>
+      <div class="pin-label" data-i18n="confirmPin">Confirmar PIN</div>
+      <div class="pin-row">
+        <span class="pin-dot" id="rc0"></span><span class="pin-dot" id="rc1"></span>
+        <span class="pin-dot" id="rc2"></span><span class="pin-dot" id="rc3"></span>
+      </div>
+
+      <div class="pin-pad">
+        <button onclick="regPinKey('1')">1</button><button onclick="regPinKey('2')">2</button><button onclick="regPinKey('3')">3</button>
+        <button onclick="regPinKey('4')">4</button><button onclick="regPinKey('5')">5</button><button onclick="regPinKey('6')">6</button>
+        <button onclick="regPinKey('7')">7</button><button onclick="regPinKey('8')">8</button><button onclick="regPinKey('9')">9</button>
+        <button onclick="regPinKey('back')" class="pin-back">⌫</button>
+        <button onclick="regPinKey('0')">0</button>
+        <button onclick="submitRegister()" class="pin-enter">✓</button>
+      </div>
+      <div id="reg-pin-error" class="login-error hidden"></div>
+    </div>
+
+    <button class="btn-admin-link" onclick="showScreen('screen-login')" data-i18n="back">← Volver</button>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN LOGIN ══════════════ -->
+<div id="screen-admin-login" class="screen hidden">
+  <div class="lang-bar">
+    <button class="lang-btn active" id="alang-es" onclick="setLang('es')">🇲🇽 ES</button>
+    <button class="lang-btn" id="alang-en" onclick="setLang('en')">🇺🇸 EN</button>
+  </div>
+  <div class="login-wrap">
+    <img src="/static/logo.png" alt="G&O" class="login-logo"/>
+    <h1 class="login-company" data-i18n="adminTitle">Administrador</h1>
+    <div class="login-card">
+      <div class="pin-label" data-i18n="adminPass">Contraseña de administrador</div>
+      <input id="admin-password-input" type="password" data-i18n-ph="phPassword" placeholder="Contraseña"
+             style="text-align:center;font-size:1.1rem;letter-spacing:.2em"
+             onkeydown="if(event.key==='Enter') doAdminLogin()"/>
+      <button class="pin-enter" style="width:100%;padding:.75rem;font-size:1rem;border-radius:10px" onclick="doAdminLogin()" data-i18n="enter">Entrar ✓</button>
+      <div id="admin-login-error" class="login-error hidden" data-i18n="passWrong">Contraseña incorrecta.</div>
+    </div>
+    <button class="btn-admin-link" onclick="showScreen('screen-login')" data-i18n="back">← Volver</button>
+  </div>
+</div>
+
+<!-- ══════════════ DASHBOARD ══════════════ -->
+<div id="screen-dashboard" class="screen hidden">
+  <nav>
+    <div class="nav-brand"><img src="/static/logo.png" class="nav-logo"/></div>
+    <div class="nav-user" id="nav-user-name"></div>
+    <div style="display:flex;gap:.5rem;align-items:center">
+      <button class="lang-btn-nav active" id="dlang-es" onclick="setLang('es')">ES</button>
+      <button class="lang-btn-nav" id="dlang-en" onclick="setLang('en')">EN</button>
+      <button class="btn-logout" onclick="logout()" data-i18n="logout">Salir</button>
+    </div>
+  </nav>
+  <div class="dash-wrap">
+    <div class="card profile-card">
+      <div class="profile-avatar" id="profile-avatar"></div>
+      <div class="profile-info">
+        <div class="profile-name" id="profile-name"></div>
+        <div class="profile-detail" id="profile-email"></div>
+        <div class="profile-detail" id="profile-phone"></div>
+        <div class="profile-detail" id="profile-address"></div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-mini"><div class="val" id="stat-today">0</div><div class="lbl" data-i18n="today">Hoy (h)</div></div>
+        <div class="stat-mini"><div class="val" id="stat-week">0</div><div class="lbl" data-i18n="week">Semana (h)</div></div>
+        <div class="stat-mini"><div class="val" id="stat-month">0</div><div class="lbl" data-i18n="month">Mes (h)</div></div>
+      </div>
+    </div>
+
+    <div class="card clock-card">
+      <div class="clock-status" id="clock-status-text"></div>
+      <div class="clock-since"  id="clock-since"></div>
+      <button class="btn-clock btn-clock-in" id="btn-clock-action" onclick="toggleClock()"></button>
+      <input id="dash-notes" type="text" data-i18n-ph="phNotes" placeholder="Notas (opcional)" class="clock-notes-input"/>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="myHistory">Mi Historial de Horas</h2>
+      <table id="my-history-table">
+        <thead><tr>
+          <th data-i18n="date">Fecha</th>
+          <th data-i18n="clockIn">Entrada</th>
+          <th data-i18n="clockOut">Salida</th>
+          <th data-i18n="hours">Horas</th>
+          <th data-i18n="notes">Notas</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN ══════════════ -->
+<div id="screen-admin" class="screen hidden">
+  <nav>
+    <div class="nav-brand">
+      <img src="/static/logo.png" class="nav-logo"/>
+      <span class="nav-title" data-i18n="adminTitle">Admin</span>
+    </div>
+    <div class="nav-links">
+      <button onclick="adminTab('employees')" data-i18n="employees">Empleados</button>
+      <button onclick="adminTab('report')" data-i18n="reports">Reportes</button>
+    </div>
+    <div style="display:flex;gap:.5rem;align-items:center">
+      <button class="lang-btn-nav active" id="admlang-es" onclick="setLang('es')">ES</button>
+      <button class="lang-btn-nav" id="admlang-en" onclick="setLang('en')">EN</button>
+      <button class="btn-logout" onclick="logout()" data-i18n="logout">Salir</button>
+    </div>
+  </nav>
+
+  <div id="admin-tab-employees" class="tab admin-tab">
+    <div class="card">
+      <h2 id="emp-form-title" data-i18n="newEmployee2">Nuevo Empleado</h2>
+      <div class="form-grid">
+        <input id="emp-name"    type="text"  data-i18n-ph="phName"    placeholder="Nombre completo *"/>
+        <input id="emp-email"   type="email" data-i18n-ph="phEmail"   placeholder="Email *"/>
+        <input id="emp-phone"   type="tel"   data-i18n-ph="phPhone"   placeholder="Teléfono"/>
+        <input id="emp-address" type="text"  data-i18n-ph="phAddress" placeholder="Dirección"/>
+        <input id="emp-pin"     type="text"  data-i18n-ph="phPin"     placeholder="PIN (4 dígitos) *" maxlength="8"/>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveEmployee()" data-i18n="save">Guardar</button>
+        <button class="btn-ghost"   onclick="cancelEdit()"   data-i18n="cancel">Cancelar</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="employeeList">Lista de Empleados</h2>
+      <table id="emp-table">
+        <thead><tr>
+          <th data-i18n="name">Nombre</th>
+          <th>Email</th>
+          <th data-i18n="phone">Teléfono</th>
+          <th data-i18n="address">Dirección</th>
+          <th>PIN</th>
+          <th data-i18n="actions">Acciones</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="admin-tab-report" class="tab admin-tab hidden">
+    <div class="card">
+      <h2 data-i18n="filters">Filtros</h2>
+      <div class="form-row">
+        <select id="report-emp"><option value="" data-i18n="allEmployees">Todos los empleados</option></select>
+        <input id="report-from" type="date"/>
+        <input id="report-to"   type="date"/>
+        <button class="btn-primary" onclick="loadReport()" data-i18n="search">Buscar</button>
+        <button class="btn-success" onclick="exportExcel()" data-i18n="exportExcel">Exportar Excel</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="report-summary" id="report-summary"></div>
+      <table id="report-table">
+        <thead><tr>
+          <th data-i18n="employee">Empleado</th>
+          <th data-i18n="date">Fecha</th>
+          <th data-i18n="clockIn">Entrada</th>
+          <th data-i18n="clockOut">Salida</th>
+          <th data-i18n="hours">Horas</th>
+          <th data-i18n="notes">Notas</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
