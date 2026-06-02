@@ -4,7 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
 import os
-_data_dir = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH", ".")
+_data_dir = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH", "/app/data")
+os.makedirs(_data_dir, exist_ok=True)
 DATABASE_URL = f"sqlite:///{_data_dir}/timesheet.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
